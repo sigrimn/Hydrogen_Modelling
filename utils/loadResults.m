@@ -1,0 +1,11 @@
+function [v1, p_opt1, history1, v2, p_opt2, history2, modelCoarse, modelRef, scheduleRef, scheduleCoarse] = loadResults(results)
+v1 = results.v1;
+v2 = results.v2;
+p_opt1 = results.p_opt1;
+p_opt2 = results.p_opt2;
+history1 = results.history1;
+history2 = results.history2;
+modelCoarse = results.modelCoarse;
+modelRef = results.modelRef;
+scheduleRef = results.scheduleRef;
+scheduleCoarse = results.scheduleCoarse;

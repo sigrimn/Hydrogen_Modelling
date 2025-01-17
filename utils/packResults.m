@@ -1,0 +1,15 @@
+function results = packResults(v1, p_opt1, history1, v2, p_opt2, history2, modelCoarse, modelRef, scheduleCoarse, scheduleRef, wsRef, wsCoarse, wellSols_opt1, wellSols_opt2)
+results.v1 = v1;
+results.v2 = v2;
+results.p_opt1 = p_opt1;
+results.p_opt2 = p_opt2;
+results.history1 = history1;
+results.history2 = history2;
+results.modelCoarse = modelCoarse;
+results.modelRef = modelRef;
+results.scheduleCoarse = scheduleCoarse;
+results.scheduleRef = scheduleRef;
+results.wsRefPert = wsRef;
+results.wsCoarse = wsCoarse;
+results.wellSols_opt1 = wellSols_opt1;
+results.wellSols_opt2 = wellSols_opt2;

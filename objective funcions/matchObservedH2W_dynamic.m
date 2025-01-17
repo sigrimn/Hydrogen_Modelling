@@ -1,4 +1,4 @@
-function obj = matchObservedH2W(model, states, schedule, observed, varargin)
+function obj = matchObservedH2W_dynamic(model, states, schedule, observed, varargin)
 % Compute mismatch-function 
 %previously named 'matchObservedOW' for oil water mismatch-function. Now we
 %have gas water 
@@ -95,15 +95,15 @@ for step = 1:numSteps
     dt = dts(step);
     if opt.mismatchSum %building functional
         obj{step} = (dt/(totTime*nnz(matchCases)))*sum( ...
-                        (1.*matchCases.*(qOs-qOs_obs)./(qOs+eps)).^2 + ...     %*ww
-                        (1.*matchCases.*(qGs-qGs_obs)./qGs_obs).^2 + ...     %*wo  
-                        (1.*matchCases.*(bhp-bhp_obs)./bhp).^2 );        %*wp
+                        (1.*matchCases.*(qOs-qOs_obs)./(qOs_obs+eps)).^2 + ...     %*ww
+                        (1.*matchCases.*(qGs-qGs_obs)./(qGs_obs+eps)).^2 + ...     %*wo  
+                        (1.*matchCases.*(bhp-bhp_obs)./(bhp_obs+eps)).^2);        %*wp
     else
         % output summands f_i^2 
         fac = dt/(totTime*nnz(matchCases));
-        mm  = {fac*(matchCases.*((qOs-qOs_obs)./(qOs+eps))).^2, ...           %*ww
-               fac*(matchCases.*((qGs-qGs_obs)./qGs_obs)).^2, ...           %*wo
-               fac*(matchCases.*((bhp-bhp_obs)./bhp)).^2};              %*wp
+        mm  = {fac*(matchCases.*((qOs-qOs_obs)./(qOs_obs+eps))).^2, ...           %*ww
+               fac*(matchCases.*((qGs-qGs_obs)./(qGs_obs+eps))).^2, ...           %*wo
+               fac*(matchCases.*((bhp-bhp_obs)./(bhp_obs+eps))).^2};              %*wp
         
         if isempty(opt.accumulateTypes)
             tmp = mm;

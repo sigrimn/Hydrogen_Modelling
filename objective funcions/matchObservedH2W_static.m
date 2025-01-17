@@ -1,4 +1,4 @@
-function obj = matchObservedH2W_changeBC(model, states, schedule, observed, varargin)
+function obj = matchObservedH2W_static(model, states, schedule, observed, varargin)
 % Compute mismatch-function 
 %previously named 'matchObservedOW' for oil water mismatch-function. Now we
 %have gas water 
@@ -96,17 +96,16 @@ for step = 1:numSteps
     dt = dts(step);
     if opt.mismatchSum %building functional
         obj{step} = (dt/(totTime*nnz(matchCases)))*sum( ...
-                        (1.*matchCases.*(qOs-qOs_obs)./(qOs_obs+eps)).^2 + ...     %*ww
-                        (1.*matchCases.*(qGs-qGs_obs)./qGs_obs).^2 + ...     %*wo  
-                        (1.*matchCases.*(bhp-bhp_obs)./bhp_obs).^2);% + ...        %*wp
-                        %(1.*matchCases.*(flux - flux_obs)./flux_obs).^2);   %changed here: flux along boundaries 
+                        (ww.*matchCases.*(qOs-qOs_obs)).^2 + ...     %*ww
+                        (wg.*matchCases.*(qGs-qGs_obs)).^2 + ...     %*wo  
+                        (wp.*matchCases.*(bhp-bhp_obs)).^2);% + ...        %*wp
     else
         % output summands f_i^2 
         fac = dt/(totTime*nnz(matchCases));
-        mm  = {fac*(matchCases.*((qOs-qOs_obs)./(qOs+eps))).^2, ...           %*ww
-               fac*(matchCases.*((qGs-qGs_obs)./qGs_obs)).^2, ...           %*wo
-               fac*(matchCases.*((bhp-bhp_obs)./bhp)).^2}; %, ...              %*wp
-                %fac*(matchCases.*((flux - flux_obs)./flux_obs)).^2};    %changed here: fluix along boundaries
+        mm  = {fac*(ww.*matchCases.*((qOs-qOs_obs))).^2, ...           %*ww
+               fac*(wg.*matchCases.*((qGs-qGs_obs))).^2, ...           %*wo
+               fac*(wp.*matchCases.*((bhp-bhp_obs))).^2}; %, ...              %*wp
+
         
         if isempty(opt.accumulateTypes)
             tmp = mm;
@@ -131,7 +130,7 @@ for step = 1:numSteps
 end
 
 end
-%--------------------------------------------------------------------------
+
 function v = vertcatIfPresent(sol, fn, nw)
 if isfield(sol, fn)
     v = vertcat(sol.(fn));
@@ -141,8 +140,6 @@ else
     v = zeros(nnz(sol.status),1);
 end
 end
-
-%--------------------------------------------------------------------------
 
 function [v, v_obs] = expandToFull(v, v_obs, status, status_obs, setToZero)
 tmp = zeros(size(status));
@@ -199,4 +196,3 @@ if isempty(wp)
     end
 end
 end
-
